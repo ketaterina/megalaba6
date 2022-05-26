@@ -1,0 +1,6 @@
+{
+    "start_menu": { "&work_data": "Работа с данными", "&work_db": "Работа с БД", "&admin" : "Администрирование"},
+    "start_menu_&work_data" : {"&add": "Добавить что-то"},
+    "start_menu_&work_db": {"&add": "Добавить что-то в БД"},
+    "start_menu_&admin":{"&add": "Добавить пользователя"}
+}
