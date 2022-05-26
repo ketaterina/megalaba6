@@ -35,5 +35,8 @@ async def start_menu_handler(callback : types.CallbackQuery):
     call_data = get_call_data(callback.data)
     await callback.message.edit_text(get_text(call_data), reply_markup=await UserGeneratorKeyboard.get_keyboard_inline(user, call_data))
     
-    state = getattr(UserStateMainMenu, call_data.replace(DELEMITER, ''))
-    await state.set()
+    try:
+        state = getattr(UserStateMainMenu, call_data.replace(DELEMITER, ''))
+        await state.set()
+    except:
+        pass
