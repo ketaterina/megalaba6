@@ -16,7 +16,7 @@ def get_call_data(text: str) -> str:
     if not index_delimiters:
         pass
 
-    if is_odd and 'back' in text and index_delimiters:
+    if 'back' in text and index_delimiters:
         delete_indexs = sorted(index_delimiters[-2:])
         return text[:delete_indexs[0] - 1]
 

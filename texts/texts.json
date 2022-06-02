@@ -1,3 +1,10 @@
 {
-    "start_menu": "Добрый вечерок"
+    "start_menu": "Доброго времени суток!",
+
+    "start_menu_&work_db_&add_song": "Введите название песни",
+    "start_menu_&work_db_&add_album": "Введите название альбома",
+    "start_menu_&work_db_&add_song_to_album" : "Выберите песню",
+    "start_menu_&work_db_&add_song_to_album_get_album": "Выберите альбом",
+
+    "admin_menu_add_user": "Выберите пользователя для назначения администратором"
 }

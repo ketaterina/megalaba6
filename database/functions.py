@@ -1,12 +1,11 @@
-from datetime import datetime, timedelta
 
-from .models import User
+from .models import Album, Song, User
 from config import MAIN_ADMIN_ID
 from .mics import session, metadata, engine
 from aiogram import types
-from typing import List, Dict, Union
+from typing import List, Dict, Text, Union
 from mics import bot
-from sqlalchemy import or_
+from sqlalchemy import or_, select
 
 
 class DataBaseFunc():
@@ -57,7 +56,128 @@ class DataBaseFunc():
 
         return user
 
+    @staticmethod
+    def get_users_no_admin() -> List[User]:
+        return session.query(User).filter_by(is_admin=False).all()
+
     # endregion
+    
+    #region Работа с моделями данных для лабы
+    def is_exist_song_name(text: str) -> bool:
+        """
+        Проверяет существование названия песни в БД
+        :param text: Название песни
+        :return: True, Если такое название уже существует
+        """
+        if not text or not isinstance(text, str):
+            raise Exception(f"Ошибка валидации параметра: {text}")
+        return bool(session.query(Song).filter_by(name=text).first())
+    
+    def is_exist_album_name(text: str) -> bool:
+        """Проверяет существование названия альбома в БД
+
+        Args:
+            text (str): Название альбма
+
+        Returns:
+            bool: True, если существует
+        """
+        if not text or not isinstance(text, str):
+            raise Exception(f"Ошибка валидации параметров при проверке сущетсвования альбома {text}")
+        return bool(session.query(Album).filter_by(name=text).first())
+
+    def add_song(text: str) -> None:
+        """
+        Добавляет новую песню в БД
+        Args:
+            text (str): Название песни
+        """
+        if not text or not isinstance(text, str):
+            raise Exception(f"Ошибка валидации параметра: {text}")
+
+        if DataBaseFunc.is_exist_song_name(text):
+            raise Exception("Песня с таким названием уже существует")
+
+        song = Song(name=text)
+        DataBaseFunc.add(song)
+    
+    def add_album(text: str) -> None:
+        """Добавляет новый альбом в БД
+
+        Args:
+            text (str): Название альбома
+        """
+        if not text or not isinstance(text, str):
+            raise Exception(f"Ошибка валидации параметров при добавлении нового альбома {text}")
+        
+        if DataBaseFunc.is_exist_album_name(text):
+            raise Exception("Альбом с таким названием уже существует")
+        
+        album = Album(name=text)
+        DataBaseFunc.add(album)
+
+    def get_all_songs() -> List[Song]:
+        """Возвращает все песни из БД
+
+        Returns:
+            List[Song]: Список песен
+        """
+        return session.query(Song).all()
+    
+    def get_song(id: int) -> Song:
+        """Возвращает объект класса Song по переданному идентификатору
+
+        Args:
+            id (int): Идентификатор песни
+
+        Returns:
+            Song: Объект класса Song из БД
+        """
+        if not id:
+            return None
+        
+        return session.query(Song).filter_by(id=id).first()
+    
+    def get_album(id: int) -> Album:
+        """Возвращает объект класса альбом
+
+        Args:
+            id (int): Идентификатор альбома
+
+        Returns:
+            Album: Объект класса альбом из БД
+        """
+        if not id:
+            return None
+        
+        return session.query(Album).filter_by(id=id).first()
+    
+    def get_all_albums() -> List[Album]:
+        """Возвращает все альбомы из БД
+
+        Returns:
+            List[Album]: Список альбомов
+        """
+        return session.query(Album).all()
+    
+    def get_all_album_without_song(song_id) -> List[Album]:
+        """Возвращает все альбомы, в которых нет заданной песни
+
+        Args:
+            song_id (_type_): Идентификатор песни
+
+        Returns:
+            List[Album]: Список альбомов
+        """
+        if not song_id:
+            return []
+        
+        albums = session.query(Album).all()
+        song = session.query(Song).filter_by(id=song_id).first()
+        song_albums_id = [item.id for item in song.albums]
+        
+        return [album for album in albums if album.id not in song_albums_id]
+    #endregion
 
     # region Работа с сообщениями
 

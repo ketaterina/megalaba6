@@ -15,6 +15,9 @@ DELEMITER = "&"
 
 def add_button_back(text: dict):
     for _, value in text.items():
+        if _ == 'start_menu':
+            continue
+
         value['&back'] = "Назад"
 
 try:
