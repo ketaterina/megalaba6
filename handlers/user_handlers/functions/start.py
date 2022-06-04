@@ -27,8 +27,6 @@ async def start_message(message: types.Message):
 
     ms = Message(user_id=user.id, message_id=mess.message_id)
     DataBaseFunc.add(ms)
-    await UserStateMainMenu.main_menu.set()
-
 
 # region Callback на кнопки
 @dp.callback_query_handler(lambda callback: callback.data == "start_menu_&work_db_&add_song", state='*')
@@ -105,7 +103,43 @@ async def add_user(callback: types.CallbackQuery):
     await callback.answer()
     user = DataBaseFunc.get_user(callback.from_user.id)
     await callback.message.edit_text(get_text("admin_menu_add_user"), reply_markup= await AdminGeneratorKeyboard.get_add_admin( "admin_menu_add_user"))
+
+
+@dp.callback_query_handler(lambda callback: callback.data == "start_menu_&work_data_&count_album",state="*")
+async def aget_count_song_in_album(callback: types.CallbackQuery):
+    await callback.answer()
+    user = DataBaseFunc.get_user(callback.from_user.id)
     
+    text = DataBaseFunc.get_count_songs_in_album()
+
+    await callback.message.edit_text(text, reply_markup= await UserGeneratorKeyboard.get_keyboard_inline(user, "start_menu_&work_data"))
+    
+@dp.callback_query_handler(lambda callback: callback.data == "start_menu_&work_data_&avg_album",state="*")
+async def aget_avg_song(callback: types.CallbackQuery):
+    await callback.answer()
+    user = DataBaseFunc.get_user(callback.from_user.id)
+    
+    text = DataBaseFunc.get_avg_songs_in_album()
+
+    await callback.message.edit_text(text, reply_markup= await UserGeneratorKeyboard.get_keyboard_inline(user, "start_menu_&work_data"))
+    
+@dp.callback_query_handler(lambda callback: callback.data == "start_menu_&work_data_&max_count_album", state="*")
+async def aget_max_song(callback: types.CallbackQuery):
+    await callback.answer()
+    user = DataBaseFunc.get_user(callback.from_user.id)
+    
+    text = DataBaseFunc.get_max_songs_in_album()
+
+    await callback.message.edit_text(text, reply_markup= await UserGeneratorKeyboard.get_keyboard_inline(user, "start_menu_&work_data"))
+
+@dp.callback_query_handler(lambda callback: callback.data == "start_menu_&work_data_&min_album", state="*")
+async def aget_min_song(callback: types.CallbackQuery):
+    await callback.answer()
+    user = DataBaseFunc.get_user(callback.from_user.id)
+    
+    text = DataBaseFunc.get_min_songs_in_album()
+
+    await callback.message.edit_text(text, reply_markup= await UserGeneratorKeyboard.get_keyboard_inline(user, "start_menu_&work_data"))
 
 @dp.callback_query_handler(lambda callback: "start_menu" in callback.data, state="*")
 async def start_menu_handler(callback: types.CallbackQuery):

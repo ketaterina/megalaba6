@@ -177,6 +177,72 @@ class DataBaseFunc():
         song_albums_id = [item.id for item in song.albums]
         
         return [album for album in albums if album.id not in song_albums_id]
+    
+    def get_count_songs_in_album():
+        """
+        Количество песен в каждом альбоме
+        """
+        albums = DataBaseFunc.get_all_albums()
+        result = ""
+        
+        for album in albums:
+            result += f"В альбоме: {album.name} {len(album.songs)} песен. \n"
+        
+        result = result if result else "Нет песен в альбомах"
+        return result
+    
+    def get_avg_songs_in_album():
+        """
+        Среднее кол-во песен в альбоме
+        """
+        albums = DataBaseFunc.get_all_albums()
+        result = ""
+        
+        count_songs = 0
+        for album in albums:
+            count_songs += len(album.songs)
+        
+        if not count_songs:
+            return "Нет песен в альбомах"
+        
+        return f"Среднее кол-во песен {count_songs / len(albums)}"
+    
+    
+    def get_max_songs_in_album():
+        """
+        Максимальное кол-во песен в альбоме
+        """
+        albums = DataBaseFunc.get_all_albums()
+        result = ""
+        
+        max_songs = 0
+        for album in albums:
+            if len(album.songs) > max_songs:
+                max_songs = len(album.songs)
+        
+        if not max_songs:
+            return "Нет песен в альбомах"
+        
+        return f"Максимальное кол-во песен {max_songs}"
+    
+    def get_min_songs_in_album():
+        """
+        Минимальное кол-во песен в альбоме
+        """
+        albums = DataBaseFunc.get_all_albums()
+        result = ""
+        
+        min_songs = None
+        for album in albums:
+            if min_songs is None:
+                min_songs = len(album.songs)
+
+            if len(album.songs) < min_songs:
+                min_songs = len(album.songs)
+        if min_songs is None:
+            return "Нет песен в альбомах"
+        return f"Минимальное кол-во песен {min_songs}"
+    
     #endregion
 
     # region Работа с сообщениями

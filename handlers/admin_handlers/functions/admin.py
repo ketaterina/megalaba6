@@ -10,17 +10,17 @@ from handlers.user_handlers.helpers.help import get_call_data
 import re
 
 
-@dp.callback_query_handler(lambda callback: callback.data == "admin_menu_back_add_user")
+@dp.callback_query_handler(lambda callback: callback.data == "admin_menu_back_add_user", state='*')
 async def add_user_back(callback: types.CallbackQuery):
     await callback.answer()
     user = DataBaseFunc.get_user(callback.from_user.id)
     await callback.message.edit_text(get_text("start_menu_&admin"), reply_markup= await UserGeneratorKeyboard.get_keyboard_inline(user, "start_menu_&admin"))
 
 
-@dp.callback_query_handler(lambda callback:  "start_menu_&admin_&add_user_@" in callback.data)
+@dp.callback_query_handler(lambda callback: "admin_menu_add_user_user@" in callback.data, state='*')
 async def add_user_id(callback: types.CallbackQuery):
     await callback.answer()
-    user_id = int(re.search(pattern="user_@\d+", string=callback.data).group().replace('user_@', ""))
+    user_id = int(re.search(pattern="user@\d+", string=callback.data).group().replace('user@', ""))
     user = DataBaseFunc.get_user(user_id)
     user.is_admin = True
     DataBaseFunc.commit()
